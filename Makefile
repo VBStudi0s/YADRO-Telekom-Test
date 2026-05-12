@@ -4,4 +4,4 @@ build:
 	mkdir -p build && cd build && cmake .. && make
 
 run:
-	./build/alice_bot
+	./build/alice_bot input.txt
