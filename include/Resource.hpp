@@ -12,14 +12,6 @@ enum class ResourceType
     EXP
 };
 
-struct ResourcePack
-{
-    int iron = 0;
-    int gold = 0;
-    int gems = 0;
-    int exp = 0;
-};
-
 class ResourceManager
 {
     std::unordered_map<std::string, ResourceType> m_str_to_type;

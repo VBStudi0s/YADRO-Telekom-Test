@@ -16,10 +16,11 @@ int main(int argc, char** argv)
     }
     std::string input_file(argv[1]);
 
+    LoadResult res;
     try
     {
         GameLoader loader;
-        LoadResult res = loader.parse_and_load_game(input_file);
+        res = loader.parse_and_load_game(input_file);
     }
     catch(const std::exception& e)
     {

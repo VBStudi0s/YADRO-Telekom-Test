@@ -14,6 +14,8 @@ struct Room
     int room_number = 0;
     std::set<int> adjacent;
     std::unordered_map<ResourceType, int> resources;
+    bool visited = false;
+    bool collected_res = false;
 
     Room() = default;
     Room(int num) : room_number(num){}
@@ -27,7 +29,10 @@ class Dungeon
 private:
     std::map<int, Room> m_rooms;
 public:
+    Dungeon() = default;
     Dungeon(std::map<int, Room> rooms);
+
+    Room& get_room(int room_num);
 };
 
 #endif

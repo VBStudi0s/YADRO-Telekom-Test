@@ -14,3 +14,7 @@ Dungeon::Dungeon(std::map<int, Room> rooms) : m_rooms(rooms)
 {
 }
 
+Room& Dungeon::get_room(int room_num)
+{
+    return m_rooms.find(room_num)->second;
+}
