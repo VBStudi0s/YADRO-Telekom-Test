@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MapLoader.hpp"
+#include "GameLoader.hpp"
 
 void USAGE()
 {
@@ -15,10 +15,11 @@ int main(int argc, char** argv)
         return 2;
     }
     std::string input_file(argv[1]);
+
     try
     {
-        MapLoader map_loader;
-        map_loader.parse_and_load_map(input_file);
+        GameLoader loader;
+        LoadResult res = loader.parse_and_load_game(input_file);
     }
     catch(const std::exception& e)
     {

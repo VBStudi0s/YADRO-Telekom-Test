@@ -1,4 +1,4 @@
-#include "MapLoader.hpp"
+#include "GameLoader.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -7,8 +7,9 @@
 #include <algorithm>
 #include <vector>
 
-void MapLoader::parse_and_load_map(const std::string& path)
+LoadResult GameLoader::parse_and_load_game(const std::string& path)
 {
+    m_rooms.clear();
     std::ifstream file_stream(path);
     if(!file_stream)
         throw std::runtime_error("Unable to open file: " + path);
@@ -24,7 +25,6 @@ void MapLoader::parse_and_load_map(const std::string& path)
     sstream >> num_of_rooms;
     if(!sstream.eof() || num_of_rooms <= 0)
         throw std::runtime_error("Invalid input file line: " + line);
-    std::cout<<"Number of rooms: "<<num_of_rooms<<'\n';    // write
 
     // parsing all rooms
     for(int i=0; i<=num_of_rooms; i++)
@@ -35,7 +35,7 @@ void MapLoader::parse_and_load_map(const std::string& path)
         int room_num = 0;
         if(!(sstream >> room_num))
             throw std::runtime_error("Unable to read room number in line: " + line);
-        std::cout<<"Room number "<<room_num<<'\n';
+        m_rooms[room_num] = Room(room_num);
 
         // read adjacent rooms
         std::string adjacents_str;
@@ -47,22 +47,31 @@ void MapLoader::parse_and_load_map(const std::string& path)
         while(adj_stream >> adj)
         {
             adj_vec.push_back(adj);
-            std::cout<<"Adj: "<<adj<<'\n';
+            m_rooms[room_num].add_adjacent(adj);
+            if(m_rooms.find(adj) != m_rooms.end())      // symmetrically
+                m_rooms[adj].add_adjacent(m_rooms[room_num].room_number);
         }
         if(!adj_stream.eof())
         throw std::runtime_error("Error in reading line: " + line);
 
         // read resources
-        int good = 0;
-        for(int i=0; i<4; i++)
-        {
+        auto read_res = [this, &line, &sstream, &room_num](ResourceType type){
+            int good = 0;
             if(!(sstream>>good))
                 throw std::runtime_error("Error in reading line: " + line);
-            std::cout<<"Resource: "<<good<<'\n';
-        }
+                m_rooms[room_num].set_resource(type, good);
+            };
+
+        read_res(ResourceType::IRON);
+        read_res(ResourceType::GOLD);
+        read_res(ResourceType::GEMS);
+        read_res(ResourceType::EXP);
+
         if(!sstream.eof())
             throw std::runtime_error("error in reading line: " + line);
     }
+
+    Dungeon dungeon(m_rooms);
 
     // reading food and doubled resource
     std::getline(file_stream, line);
@@ -72,22 +81,14 @@ void MapLoader::parse_and_load_map(const std::string& path)
     if(!(sstream >> food))
         throw std::runtime_error("error in reading line: " + line);
 
-    std::cout<<"Food: "<<food<<'\n';
     std::string doubled_resource;
     if(!(sstream >> doubled_resource))
         throw std::runtime_error("error in reading line: " + line);
 
-    // TODO: fix this
-    if(doubled_resource == "iron")
-        std::cout<<"Doubled: "<<doubled_resource<<'\n';
-    else if(doubled_resource == "gold")
-        std::cout<<"Doubled: "<<doubled_resource<<'\n';
-    else if (doubled_resource == "gems")
-        std::cout<<"Doubled: "<<doubled_resource<<'\n';
-    else if (doubled_resource == "exp")
-        std::cout<<"Doubled: "<<doubled_resource<<'\n';
-    else
+    ResourceManager r_manager;
+    if(!r_manager.is_valid_resource(doubled_resource))
         throw std::runtime_error("error in reading line: " + line);
     if(!sstream.eof())
             throw std::runtime_error("error in reading line: " + line);
+    return LoadResult(dungeon, food, r_manager.str_to_res_type(doubled_resource));
 }
