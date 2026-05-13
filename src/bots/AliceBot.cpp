@@ -15,30 +15,30 @@ std::unique_ptr<IAction> AliceBot::act()
 {
     if(m_game_state.food > m_food_treshold)
         return _explore_stage_act();
+    else if(m_game_state.food == m_food_treshold && !m_dungeon.get_room(m_game_state.current_room).collected_res)
+        return _explore_stage_act();
     return _return_stage_act();
 }
 
 std::unique_ptr<IAction> AliceBot::_explore_stage_act()
 {
-    std::cout<<"Explore stage\n";
-
     Room& cur_coom = m_dungeon.get_room(m_game_state.current_room);
     if(m_game_state.current_room != 0 && !cur_coom.collected_res && _room_has_resources(cur_coom))
         return std::make_unique<CollectAction>(m_game_state.current_room, _get_most_valuable_res(cur_coom));
 
-    // move to the next unvisited room
-    auto path = m_path_finder.build_path(m_game_state.current_room, [](const Room& r){ return !r.visited; });
-    if(path.size() == 0)
-        return _return_stage_act();
-    int next_room = path.front();
-    return std::make_unique<MoveAction>(next_room);
+    if(m_game_state.food > m_food_treshold)
+    {
+        // move to the next unvisited room
+        auto path = m_path_finder.build_path(m_game_state.current_room, [](const Room& r){ return !r.visited; });
+        if(path.size() == 0)
+            return _return_stage_act();
+        int next_room = path.front();
+        return std::make_unique<MoveAction>(next_room);
+    }
 }
 
 std::unique_ptr<IAction> AliceBot::_return_stage_act()
 {
-    std::cout<<"return stage\n";
-    std::cout<<"Current room: "<<m_game_state.current_room<<'\n';
-
     // find path to the start room (go only through visited)
     auto path = m_path_finder.build_path(
         m_game_state.current_room,
@@ -57,8 +57,11 @@ ResourceType AliceBot::_get_most_valuable_res(const Room& room)
 {
     auto res_sorted = m_res_manager.get_resource_value_sorted();
     for(const auto& p: res_sorted)
-        if(room.resources.count(p.first) > 0)
+    {   
+        auto it = room.resources.find(p.first);
+        if(it != room.resources.end() && it->second > 0)
             return room.resources.find(p.first)->first;
+    }
 }
 
 bool AliceBot::_room_has_resources(const Room& room)

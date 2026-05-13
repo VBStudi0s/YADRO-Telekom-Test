@@ -15,6 +15,7 @@ add_executable(alice_bot
     src/actions/MoveAction.cpp
     src/bots/AliceBot.cpp
     src/GameManager.cpp
+    src/Logger.cpp
 )
 
 target_include_directories(alice_bot PRIVATE include)

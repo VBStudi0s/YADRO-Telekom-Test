@@ -7,11 +7,14 @@ CollectAction::CollectAction(int room_num, ResourceType res) : m_room(room_num),
 void CollectAction::act(Dungeon& dungeon, GameState& game_state)
 {
     Room& room = dungeon.get_room(m_room);
-        std::cout<<"Collect: "<<room.resources[m_res]<<'\n';
-
     game_state.collected_resources[m_res] += room.resources[m_res];
     room.resources[m_res] = -1;
     if(room.collected_res)
         game_state.food--;
     room.collected_res = true;
+}
+
+void CollectAction::acceptLogger(const Logger& logger)
+{
+    logger.logCollectAction(m_res);
 }

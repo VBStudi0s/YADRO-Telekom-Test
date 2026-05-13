@@ -2,12 +2,14 @@
 #define IACTION_HPP
 
 #include "Dungeon.hpp"
+#include "Logger.hpp"
 #include "GameState.hpp"
 
 class IAction
 {
 public:
     virtual void act(Dungeon& dungeon, GameState& game_state) = 0;
+    virtual void acceptLogger(const Logger& logger) = 0;
 
     virtual ~IAction() = default;
 };

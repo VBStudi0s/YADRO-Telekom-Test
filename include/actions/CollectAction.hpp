@@ -3,6 +3,7 @@
 
 #include "IAction.hpp"
 #include "Resource.hpp"
+#include "Logger.hpp"
 
 class CollectAction : public IAction
 {
@@ -12,6 +13,7 @@ public:
     CollectAction(int room_num, ResourceType res);
 
     void act(Dungeon& dungeon, GameState& game_state) override;
+    void acceptLogger(const Logger& logger) override;
 };
 
 #endif
