@@ -1,6 +1,8 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
+#include <fstream>
+
 #include "GameState.hpp"
 #include "Resource.hpp"
 #include "Dungeon.hpp"
@@ -9,6 +11,8 @@ class Logger
 {
     const Dungeon& m_dungeon;
     const ResourceManager& m_res_manager;
+
+    mutable std::ofstream m_out_stream;
 public:
     Logger(const Dungeon& dungeon, const ResourceManager& res_manager);
 
