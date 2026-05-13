@@ -9,14 +9,14 @@
 
 class AliceBot : public IBot
 {
-    Dungeon& m_dungeon;
-    GameState& m_game_state;
-    ResourceManager& m_res_manager;
+    const Dungeon& m_dungeon;
+    const GameState& m_game_state;
+    const ResourceManager& m_res_manager;
     BFS m_path_finder;
 
     int m_food_treshold = 0;
 public:
-    AliceBot(Dungeon& dungeon, GameState& game_state, ResourceManager& res_manager);
+    AliceBot(const Dungeon& dungeon, const GameState& game_state, const ResourceManager& res_manager);
 
     std::unique_ptr<IAction> act() override;
 private:
