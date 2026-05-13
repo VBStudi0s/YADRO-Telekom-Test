@@ -33,7 +33,7 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
         sstream = std::stringstream(line);
 
         int room_num = 0;
-        if(!(sstream >> room_num))
+        if(!(sstream >> room_num) || room_num < 0 || room_num > num_of_rooms)
             throw std::runtime_error("Unable to read room number in line: " + line);
         m_rooms[room_num] = Room(room_num);
 
@@ -46,13 +46,15 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
         int adj = 0;
         while(adj_stream >> adj)
         {
+            if(adj < 0 || adj > num_of_rooms || adj == room_num)
+                throw std::runtime_error("Error in reading line: " + line);
             adj_vec.push_back(adj);
             m_rooms[room_num].add_adjacent(adj);
             if(m_rooms.find(adj) != m_rooms.end())      // symmetrically for safety
                 m_rooms[adj].add_adjacent(m_rooms[room_num].room_number);
         }
         if(!adj_stream.eof())
-        throw std::runtime_error("Error in reading line: " + line);
+            throw std::runtime_error("Error in reading line: " + line);
 
         // read resources
         auto read_res = [this, &line, &sstream, &room_num](ResourceType type){
