@@ -2,6 +2,7 @@
 
 #include "GameLoader.hpp"
 #include "GameManager.hpp"
+#include "bots/AliceBot.hpp"
 
 void USAGE()
 {
@@ -18,6 +19,9 @@ int main(int argc, char** argv)
     std::string input_file(argv[1]);
 
     LoadResult res;
+    Dungeon dungeon;
+    ResourceManager res_manager;
+    Logger logger(dungeon, res_manager);
     try
     {
         GameLoader loader;
@@ -25,12 +29,21 @@ int main(int argc, char** argv)
     }
     catch(const std::exception& e)
     {
-        std::cerr <<"Error while loading map: "<< e.what() << '\n';
+        std::string err(e.what());
+        logger.logError(err);
         return 2;
     }
 
-    GameManager game(res);
-    game.attach_bot();
+    GameState state;
+    state.food = res.food;
+    dungeon = res.dungeon;
+    res_manager.double_resource_value(res.doubled_res);
+
+    GameManager game(dungeon, state, res_manager, logger);
+
+    std::unique_ptr<IBot> bot = std::make_unique<AliceBot>(dungeon, state, res_manager);
+
+    game.attach_bot(std::move(bot));
     game.simulate();
 
     return 0;

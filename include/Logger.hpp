@@ -20,6 +20,7 @@ public:
     void logGameResult(const GameState& state) const;
     void logMoveAction(int move_to) const;
     void logCollectAction(ResourceType res) const;
+    void logError(const std::string& err) const;
 
 private:
     void _print_res(int res) const;

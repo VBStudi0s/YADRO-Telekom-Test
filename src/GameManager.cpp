@@ -4,17 +4,15 @@
 
 #include <iostream>
 
-GameManager::GameManager(const LoadResult& load) :
-    m_dungeon(load.dungeon), m_logger(m_dungeon, m_res_manager)
-{
-    m_state.food = load.food;
-    m_res_manager.double_resource_value(load.doubled_res);
-    
-}
+GameManager::GameManager(Dungeon& dungeon,
+        GameState& state,
+        ResourceManager& res_manager,
+        Logger& logger
+    ) : m_dungeon(dungeon), m_state(state), m_res_manager(res_manager), m_logger(logger){}
 
-void GameManager::attach_bot()
+void GameManager::attach_bot(std::unique_ptr<IBot> bot)
 {
-    m_bot = std::make_unique<AliceBot>(m_dungeon, m_state, m_res_manager);
+    m_bot = std::move(bot);
 }
 
 void GameManager::simulate()

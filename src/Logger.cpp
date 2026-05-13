@@ -37,7 +37,7 @@ void Logger::logGameResult(const GameState& state) const
 {
     m_out_stream<<"result";
     int total_res = 0;
-    
+
     auto collect_res = [this, &state, &total_res](ResourceType type){
         auto it = state.collected_resources.find(type);
         int res = 0;
@@ -53,4 +53,9 @@ void Logger::logGameResult(const GameState& state) const
     collect_res(ResourceType::EXP);
 
     m_out_stream<<' '<<total_res<<'\n';
+}
+
+void Logger::logError(const std::string& err) const
+{
+    m_out_stream<<"Error: "<<err<<std::endl;
 }

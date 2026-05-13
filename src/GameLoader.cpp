@@ -23,7 +23,7 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
     sstream = std::stringstream(line);
     int num_of_rooms = 0;
     sstream >> num_of_rooms;
-    if(!sstream.eof() || num_of_rooms <= 0)
+    if(!sstream.eof() || num_of_rooms <= 0 || num_of_rooms > 255)
         throw std::runtime_error("Invalid input file line: " + line);
 
     // parsing all rooms
@@ -48,7 +48,7 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
         {
             adj_vec.push_back(adj);
             m_rooms[room_num].add_adjacent(adj);
-            if(m_rooms.find(adj) != m_rooms.end())      // symmetrically
+            if(m_rooms.find(adj) != m_rooms.end())      // symmetrically for safety
                 m_rooms[adj].add_adjacent(m_rooms[room_num].room_number);
         }
         if(!adj_stream.eof())
@@ -57,7 +57,7 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
         // read resources
         auto read_res = [this, &line, &sstream, &room_num](ResourceType type){
             int good = 0;
-            if(!(sstream>>good))
+            if(!(sstream>>good) || good < 0 || good > 255)
                 throw std::runtime_error("Error in reading line: " + line);
                 m_rooms[room_num].set_resource(type, good);
             };
@@ -78,7 +78,7 @@ LoadResult GameLoader::parse_and_load_game(const std::string& path)
     sstream = std::stringstream(line);
 
     int food = 0;
-    if(!(sstream >> food))
+    if(!(sstream >> food) || food < 2 || food > 255)
         throw std::runtime_error("error in reading line: " + line);
 
     std::string doubled_resource;

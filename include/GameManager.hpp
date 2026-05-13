@@ -9,15 +9,19 @@
 
 class GameManager
 {
-    Dungeon m_dungeon;
-    GameState m_state;
-    ResourceManager m_res_manager;
-    Logger m_logger;
+    Dungeon& m_dungeon;
+    GameState& m_state;
+    ResourceManager& m_res_manager;
+    Logger& m_logger;
     std::unique_ptr<IBot> m_bot;
 public:
-    GameManager(const LoadResult& load);
+    GameManager(Dungeon& dungeon,
+        GameState& state,
+        ResourceManager& res_manager,
+        Logger& logger
+    );
 
-    void attach_bot();      // think about this
+    void attach_bot(std::unique_ptr<IBot> bot);      // think about this
 
     void simulate();
 };
