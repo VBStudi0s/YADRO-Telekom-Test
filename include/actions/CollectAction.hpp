@@ -4,7 +4,7 @@
 #include "IAction.hpp"
 #include "Resource.hpp"
 
-class CollectAction : IAction
+class CollectAction : public IAction
 {
     int m_room = 0;
     ResourceType m_res;

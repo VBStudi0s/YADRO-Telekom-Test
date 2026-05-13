@@ -2,7 +2,7 @@
 
 BFS::BFS(const Dungeon& dungeon) : m_dungeon(dungeon) {}
 
-std::vector<int> BFS::build_path(int start_room, std::function<bool(const Room&)> predicate)
+std::vector<int> BFS::build_path(int start_room, std::function<bool(const Room&)> end_predicate, std::function<bool(const Room&)> path_predicate)
 {
     m_visited = { start_room };
     m_queue = { start_room };
@@ -14,11 +14,11 @@ std::vector<int> BFS::build_path(int start_room, std::function<bool(const Room&)
         m_queue.pop_front();
 
         const Room& cur_room = m_dungeon.get_room(current);
-        if(predicate(cur_room))
+        if(end_predicate(cur_room))
             return reconstruct_path(start_room, current);
         for(const int adj: cur_room.adjacent)
         {
-            if(m_visited.count(adj) == 0)
+            if(m_visited.count(adj) == 0 && path_predicate(m_dungeon.get_room(adj)))
             {
                 m_visited.insert(adj);
                 m_parent[adj] = current;

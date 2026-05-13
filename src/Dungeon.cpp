@@ -12,6 +12,7 @@ void Room::set_resource(ResourceType type, int quantity)
 
 Dungeon::Dungeon(std::map<int, Room> rooms) : m_rooms(rooms)
 {
+    m_rooms[0].visited = true;
 }
 
 Room& Dungeon::get_room(int room_num)

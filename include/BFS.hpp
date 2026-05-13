@@ -18,7 +18,11 @@ class BFS
 public:
     BFS(const Dungeon& dungeon);
 
-    std::vector<int> build_path(int start_room, std::function<bool(const Room&)> predicate);
+    std::vector<int> build_path(
+        int start_room, 
+        std::function<bool(const Room&)> end_predicate, 
+        std::function<bool(const Room&)> path_predicate  = [](const Room& r){ return true; }
+    );
 private:
     std::vector<int> reconstruct_path(int start_room, int end_room);
 };

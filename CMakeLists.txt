@@ -13,6 +13,7 @@ add_executable(alice_bot
     src/BFS.cpp
     src/actions/CollectAction.cpp
     src/actions/MoveAction.cpp
+    src/bots/AliceBot.cpp
 )
 
 target_include_directories(alice_bot PRIVATE include)

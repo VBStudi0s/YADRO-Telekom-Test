@@ -3,6 +3,8 @@
 
 #include <unordered_map>
 #include <string>
+#include <utility>
+#include <vector>
 
 enum class ResourceType
 {
@@ -21,7 +23,10 @@ public:
 
     bool is_valid_resource(const std::string& res) const;
     ResourceType str_to_res_type(const std::string& res) const;
+    int get_res_value(ResourceType type) const;
     void double_resource_value(ResourceType type);
+
+    std::vector<std::pair<ResourceType, int>> get_resource_value_sorted() const;
 };
 
 #endif
