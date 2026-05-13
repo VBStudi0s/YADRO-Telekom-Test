@@ -3,6 +3,8 @@
 #include "actions/MoveAction.hpp"
 #include "actions/CollectAction.hpp"
 
+#include <iostream>
+
 AliceBot::AliceBot(Dungeon& dungeon, GameState& game_state, ResourceManager& res_manager) :
     m_dungeon(dungeon), m_game_state(game_state), m_res_manager(res_manager),  m_path_finder(m_dungeon)
 {
@@ -18,6 +20,8 @@ std::unique_ptr<IAction> AliceBot::act()
 
 std::unique_ptr<IAction> AliceBot::_explore_stage_act()
 {
+    std::cout<<"Explore stage\n";
+
     Room& cur_coom = m_dungeon.get_room(m_game_state.current_room);
     if(m_game_state.current_room != 0 && !cur_coom.collected_res && _room_has_resources(cur_coom))
         return std::make_unique<CollectAction>(m_game_state.current_room, _get_most_valuable_res(cur_coom));
@@ -32,6 +36,9 @@ std::unique_ptr<IAction> AliceBot::_explore_stage_act()
 
 std::unique_ptr<IAction> AliceBot::_return_stage_act()
 {
+    std::cout<<"return stage\n";
+    std::cout<<"Current room: "<<m_game_state.current_room<<'\n';
+
     // find path to the start room (go only through visited)
     auto path = m_path_finder.build_path(
         m_game_state.current_room,

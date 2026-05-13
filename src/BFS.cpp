@@ -1,5 +1,7 @@
 #include "BFS.hpp"
 
+#include <iostream>
+
 BFS::BFS(const Dungeon& dungeon) : m_dungeon(dungeon) {}
 
 std::vector<int> BFS::build_path(int start_room, std::function<bool(const Room&)> end_predicate, std::function<bool(const Room&)> path_predicate)
@@ -7,7 +9,6 @@ std::vector<int> BFS::build_path(int start_room, std::function<bool(const Room&)
     m_visited = { start_room };
     m_queue = { start_room };
     m_parent = {};
-
     while(!m_queue.empty())
     {
         int current = m_queue.front();

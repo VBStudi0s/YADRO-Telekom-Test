@@ -15,6 +15,13 @@ ResourceManager::ResourceManager()
         {"gems", ResourceType::GEMS},
         {"exp", ResourceType::EXP},
     };
+
+    m_type_to_str = {
+        {ResourceType::IRON, "iron"},
+        {ResourceType::GOLD, "gold"},
+        {ResourceType::GEMS, "gems"},
+        {ResourceType::EXP, "exp"},
+    };
 }
 
 bool ResourceManager::is_valid_resource(const std::string& res) const
@@ -25,6 +32,11 @@ bool ResourceManager::is_valid_resource(const std::string& res) const
 ResourceType ResourceManager::str_to_res_type(const std::string& res) const
 {
     return m_str_to_type.find(res)->second;
+}
+
+std::string ResourceManager::res_type_to_str(ResourceType type) const
+{
+    return m_type_to_str.find(type)->second;
 }
 
 void ResourceManager::double_resource_value(ResourceType type)

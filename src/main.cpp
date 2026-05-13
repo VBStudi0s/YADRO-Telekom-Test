@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "GameLoader.hpp"
+#include "GameManager.hpp"
 
 void USAGE()
 {
@@ -27,6 +28,10 @@ int main(int argc, char** argv)
         std::cerr <<"Error while loading map: "<< e.what() << '\n';
         return 2;
     }
+
+    GameManager game(res);
+    game.attach_bot();
+    game.simulate();
 
     return 0;
 }
