@@ -10,6 +10,7 @@ add_executable(alice_bot
     src/GameLoader.cpp
     src/Dungeon.cpp
     src/Resource.cpp
+    src/BFS.cpp
     src/actions/CollectAction.cpp
     src/actions/MoveAction.cpp
 )

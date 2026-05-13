@@ -5,7 +5,6 @@
 #include <map>
 
 #include "Dungeon.hpp"
-#include "Player.hpp"
 
 struct LoadResult
 {

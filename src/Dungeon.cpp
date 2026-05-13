@@ -18,3 +18,8 @@ Room& Dungeon::get_room(int room_num)
 {
     return m_rooms.find(room_num)->second;
 }
+
+const Room& Dungeon::get_room(int room_num) const
+{
+    return m_rooms.find(room_num)->second;
+}

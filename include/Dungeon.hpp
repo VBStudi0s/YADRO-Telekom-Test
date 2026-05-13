@@ -33,6 +33,8 @@ public:
     Dungeon(std::map<int, Room> rooms);
 
     Room& get_room(int room_num);
+
+    const Room& get_room(int room_num) const;
 };
 
 #endif
